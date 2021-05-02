@@ -1,0 +1,1947 @@
+<html>
+  <meta name="viewport" content="width=device-width">
+  <meta name="mobile-web-app-capable" content="yes">
+  <head>
+    <meta charset='utf-8'/>
+    <script src='jquery-3.4.1.min.js' type='text/javascript'></script>
+    <script language="JavaScript" type="text/javascript" src="teclado.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <script src="bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+    <style>
+		button#botonMostrarTeclado{
+			font-size: 1em;
+			text-align: center;
+		}
+		table#tablaHistorial{
+			margin-left: 2em;
+			inline-size: fit-content;
+			max-inline-size: fit-content;
+			font: -webkit-control;
+		}
+		table#tablaTeclado{
+			inline-size: fit-content;
+			max-inline-size: fit-content;
+		}
+		caption{
+			padding-top: .75rem;
+			padding-bottom: .75rem;
+			color: #6c757d;
+			text-align: center;
+			caption-side: top;
+		}
+		input#campo_clave{
+			font-size: 1.5em;
+			text-align: center;
+			opacity: 100;
+			width: 12em;
+			margin-top: 0.2em;
+			border: double;
+		}
+		h1#tituloFinalizar{
+			border-bottom: ridge;
+			text-align: -webkit-center;
+			padding-bottom: 0.5em;
+			padding-top: 1em;
+		}
+		p#textoFinalizar{
+			padding-bottom: 2em;
+			padding-top: 2em;
+		}
+		button {        
+			font-size:2em; 
+		}
+		div.capa {
+			display:none; 
+			padding:1em; 
+		}
+		div.capaVisible {
+			display:block!important;
+		}
+		div#descripcionError {
+			color:red;         
+			text-align: center; 
+			margin-bottom: 2em; 
+		}
+		div#tituloError {
+			color:darkred; 
+			font-weight: bold; 
+			font-size: 2em; 
+			text-align: center; 
+		}
+		div#tituloErrorContenedor{
+			color:darkred; 
+			font-weight: bold; 
+			font-size: 2em; 
+			text-align: center;
+		}
+		div#descripcionErrorContenedor{
+			color:red;         
+			text-align: center; 
+			margin-bottom: 2em;
+		}
+		div#errorFinalizar #descripcionErrorFinalizar {
+			color:red;         
+			text-align: center; 
+			margin-bottom: 2em; 
+		}
+		#tituloConfirmarFinalizado{
+			text-align: center;
+			font-weight: bold;
+			font-size: 2em;
+		}
+		#descripcionConfirmarFinalizado{
+			text-align: center;
+			margin-bottom: 2em;
+		}
+		div#errorFinalizar #tituloErrorFinalizar {
+			color:darkred; 
+			font-weight: bold; 
+			font-size: 2em; 
+			text-align: center; 
+		}
+		.labelInfo {
+			font-size: 0.75em; 
+		}
+		.infoConfirmarUsuario {
+			font-size: 2em; 
+			font-weight: bold; 
+			color: blue;
+		}
+		.infoConfirmarVehiculo{
+			font-size: 2em;
+			font-weight: bold;
+			color: purple;
+		}
+		.infoConfirmarBox{
+			font-size: 2em;
+			font-weight: bold;
+			color: #732626;
+		}
+		.infoAlbaranes{
+			border-bottom: 1px black dashed;
+		}
+		.descripcionConfirmar {
+			margin-bottom: 1em; 
+			border-bottom: 1px black dashed; 
+		}
+		.titulo_loading {
+			font-weight: bold;
+			font-size: 1.4em; 
+		}
+		.descripcion_loading {
+			color:gray; 
+		}
+
+		.log{
+			position: absolute;       
+			bottom:1em; 
+			margin:auto ;
+			display:block; 
+			text-align: center; 
+			width: 100%; 
+			background-color:lightgreen;
+			color:darkgreen;
+			font-weight: bold; 
+			margin-bottom:0.5em; 
+		}
+
+		.logPermanente {      
+			bottom:1em; 
+			margin:auto ;
+			display:block; 
+			text-align: center; 
+			width: 100%; 
+			background-color:#00ff00;
+			color:darkgreen;
+			font-weight: bold; 
+			margin-bottom:0.5em; 
+		}
+
+		/* FICHA Carga */
+
+		.tituloCarga{
+			color: #656172;
+			font-weight: normal;
+			font-size: 20px;
+			font-family: Arial;
+		}
+
+		.fichaCarga{
+			background-color:#f0f0f0; 
+			padding:0.5em; 
+			margin:0.5em; 
+			box-shadow: 0 0 1em #cdcdcd;
+			border:1px white solid;
+			cursor: pointer;
+		}
+
+		/* FINAL FICHA Carga */
+
+		/* FICHA ALBARAN */
+
+		.fichaAlbaran {
+			background-color:#f0f0f0; 
+			padding:0.5em; 
+			margin:0.5em; 
+			box-shadow: 0 0 1em #cdcdcd;
+			border:1px white solid;
+		}
+		.fichaAlbaran .tituloFichaAlbaran {
+			font-size:1.2em; 
+		}
+		.fichaAlbaran .subtitulo {
+			background-color:red; 
+		}
+		.fichaAlbaran .subtitulo .barraProgreso progress {
+			text-align: center;
+			height: 1.2em;
+			width: 100%;
+			-webkit-appearance: none;
+			border: none;
+
+			/* Set the progressbar to relative */
+			position:relative;
+		}
+		.fichaAlbaran .subtitulo .barraProgreso progress:before {
+			content: attr(data-label);
+			font-size: 0.8em;
+			vertical-align: 0;
+			/*Position text over the progress bar */
+			position:absolute;
+			left:0;
+			right:0;
+		}
+		.fichaAlbaran .subtitulo .barraProgreso progress::-webkit-progress-bar {
+			background-color: #c9c9c9;
+		}
+		.fichaAlbaran .subtitulo .barraProgreso progress::-webkit-progress-value {
+			background-color: #7cc4ff;
+		}
+		.fichaAlbaran .subtitulo .barraProgreso  progress::-moz-progress-bar {
+			background-color: #7cc4ff;
+		}
+
+		/* FINAL FICHA ALBARAN */
+
+		.fichaContenedor{
+			background-color:#f0f0f0; 
+			padding:0.5em; 
+			margin:0.5em; 
+			box-shadow: 0 0 1em #cdcdcd;
+			border:1px white solid;
+		}
+		.contenedorLeido {
+			color:green;      
+		}
+		.contenedorNoLeido {
+			color:red;
+		}
+		.nombre{
+			color: blue;
+			padding-right: 10;
+			margin-left: 1em;
+			float: left;
+		}
+		.vehiculo{
+			color: purple;
+			padding-right: 10;
+			float: left;
+			margin-left: 0.5em;
+		}
+		.box{
+			color: #732626;
+			padding-right: 10;
+			float: left;
+			margin-left: 0.5em;
+		}
+		.id{
+			font-size: 0.9em;
+			float: right;
+			padding-right: 1em;
+		}
+		div#cabecera{
+			background-color: D0D0D0;
+		}
+		.botonRefrescar{
+			font: message-box;
+			float: right;
+			margin-right: 0.5em;
+			font-size: 0.9em;
+		}
+		.info{
+			background-color: D0D0D0;
+		}
+		h1#tituloHistorial{
+			border-bottom: 1px black dashed;
+		}
+		button#buttonHistorial{
+			font-size: medium;
+			margin-left: 2em;
+		}
+		audio{
+			display: none;
+		}
+    </style>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+  </head>
+  <body onload="marcador('c','campo_clave');">    
+
+    <audio id="audioCorrecto" src="correct-ding.mp3" controls>
+	</audio>
+
+	<audio id="audioError" src="error.mp3" controls>
+	</audio>
+
+    <div id="cabecera" align="center"></div>     
+    <div id="logPermanente"></div><br>
+
+    <!-- Capa teclado -->
+    <div class='capa' id="teclado" align="center" valing="center"><br><br>
+        <table id="tablaTeclado" cellpadding="2" cellspacing="0">
+            <tr>
+                <td>Código</td>
+            </tr>
+            <tr>
+                <td><input type="text" id="campo_clave" /></td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <div id="c"></div>
+                </td>
+            </tr>
+        </table>
+        <Button class='btn btn-success btn-lg' id='aceptarError'>Aceptar</Button>
+        <Button class='btn btn-secondary btn-lg' id='volverTeclado'>Volver</Button><br>
+    </div>
+
+    <!-- Capa Usuario -->
+    <div id="usuario" align="center" class='capa' >
+        <h1>Usuario</h1>    
+        <p>Escanea tu nombre de usuario</p>
+        <Button id="botonMostrarTeclado" class='btn btn-secondary btn-lg'>Entrada manual</Button>
+    	</br>
+        <input id="usuarioLogin" name="usuarioLogin" autocomplete="off" type="text" data-foco=true value=""/>          
+    </div>
+
+    <!-- Capa MAIN con nueva carga o retomar carga -->
+    <div id="main" align="center" class='capa' >
+      </br></br></br>
+      <Button id="buttonNuevaCarga" class='btn btn-secondary btn-lg'>Nueva Carga</Button>
+      </br></br></br>    
+      <Button id="buttonRetomarCarga" class='btn btn-secondary btn-lg'>Retomar Carga</Button>     
+    </div>
+
+    <!-- Capa vehiculo -->
+    <div id="vehiculo" align="center" class='capa'>
+      <div id="vehiculoForm">
+        <h1>Vehiculo</h1>
+        <p>Escanea el codigo del vehiculo</p>
+        <Button id="botonMostrarTeclado" class='btn btn-secondary btn-lg'>Entrada manual</Button>
+        </br>
+        <input id="vehiculoLogin" autocomplete="off" name="vehiculoLogin" type="text" data-foco=true value=""/>
+      </div>
+    </div>
+
+    <!-- Capa estacion de carga -->
+    <div id="box" align="center" class='capa' >
+        <h1>Box</h1>    
+        <p>Indica el box:</p>
+    	</br>
+        <input type="number" autocomplete="off" onKeyDown="if(this.value.length==2 && event.keyCode!=8) return false;" class="boxInput" id="boxLogin" type="text" data-foco=true value="" max="99" maxlength="2" />   
+        <br><br>
+        <Button id="boxBoton" class='btn btn-secondary btn-lg'>Aceptar</Button>       
+    </div>
+
+    <!-- Capa historial -->
+    <div id="historial" class="capa" align="center">
+    	<h1 id="tituloHistorial">Historial de escaneos</h1><br>
+    	<Button class='btn btn-secondary btn-lg' id='volverHistorial'>Volver</Button><br>
+    	<table id="tablaHistorial" class="table table-striped">
+			<caption align="top">Historial de escaneos</caption>
+			<tr>
+				<th scope="col">Dato escaneado</th>
+				<th scope="col">Fecha</th>
+			</tr>					
+		</table>
+    </div>
+
+    <!-- Capa canfirmacion de los datos ingresados -->
+    <div id="confirmar" align="center" class='capa' >
+    
+      <div id="descripcionConfirmar" class='descripcionConfirmar'></div>
+      <div class='labelInfo'>Usuario:</div> 
+      <div id="usuarioConfirmar" class='infoConfirmarUsuario'></div>        
+      <div class='labelInfo'>Vehiculo:</div>
+      <div id="vehiculoConfirmar" class='infoConfirmarVehiculo'></div>
+      <div class='labelInfo'>Box:</div>
+      <div id="boxConfirmar" class='infoConfirmarBox'></div>
+      </br>
+      <Button id="buttonConfirmarCarga" class='btn btn-success btn-lg'>Confirmar</Button>
+      <Button id="buttonCancelarGenerarCarga" class='btn btn-secondary btn-lg'>Cancelar</Button>
+      </br></br>
+      <div id="infoAlbaranes" class="infoAlbaranes">Información de los albaranes:</div>
+      </br>
+    </div>
+
+    <!-- Capa de lectura de albaranes y contenedores -->
+    <div id="albaranes" align="center" class='capa'>
+        <h1>Albaranes/</h1>
+        <h1>Contenedores</h1> 
+        <p>Escanea un albaran o un contenedor</p>
+        <Button id="botonMostrarTeclado" class='btn btn-secondary btn-lg'>Entrada manual</Button>
+        </br>
+        <input id="entrarAlbaranContenedor" autocomplete="off" type="text" data-foco=true/>
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" id="barraProgreso" style="width: 0%;">0%</div>
+      </div>
+      </br></br>
+      <Button id="buttonFinalizar" class='btn btn btn-success'>Finalizar</Button>
+      <Button id="buttonHistorial" class='btn btn-secondary btn-lg'>Historial</Button>
+      </br></br>
+      <div id="contenedores" align="center"></div>
+    </div>
+
+    <!-- Capa finalizar -->
+    <div id="finalizar" align="center" class='capa'>
+      <h1 id="tituloFinalizar"></h1>
+      <p id="textoFinalizar"></p>
+      <Button class='btn btn-secondary btn-lg' onClick="location.reload()">Empezar nueva carga</Button>
+    </div>
+
+    <!-- Capa error -->
+    <div id="error" align="center" class='capa'>
+      <div id="tituloError"></div>
+      <div id="descripcionError"></div>
+      <Button class='btn btn-danger btn-lg btn-block' id='aceptarError'>Aceptar</Button>
+    </div>
+
+    <!-- Capa confirmar finalizado -->
+    <div id="confirmarFinalizado" align="center" class='capa'>
+      <div id="tituloConfirmarFinalizado"></div>
+      <div id="descripcionConfirmarFinalizado"></div>
+      <Button class='btn btn btn-success btn-block btn-lg' id='botonFinalizar'>Aceptar</Button></br>
+      <Button class='btn btn-danger' id='aceptarError'>Volver</Button>
+    </div>
+
+    <!-- Capa error al finalizar -->
+    <div id="errorFinalizar" align="center" class='capa'  >
+      <div id="tituloErrorFinalizar"></div>
+      <div id="descripcionErrorFinalizar"></div>
+      <Button class='btn btn-danger btn-lg btn-block' id='aceptarError'>Volver</Button></br>
+      <Button id="buttonFinalizar" class='btn btn btn-success'>Finalizar</Button>
+    </div>
+
+    <!-- Capa error de contenedor -->
+    <div id="errorContenedor" align="center" class='capa'  >
+      <div id="tituloErrorContenedor"></div>
+      <div id="descripcionErrorContenedor"></div>
+      <Button class='btn btn-danger btn-lg btn-block' id='aceptarError'>Aceptar</Button>
+    </div>
+
+   	<!-- Capa de carga -->
+    <div class='capa' id='loading' align='center'>
+      <div id='titulo_loading' class='titulo_loading'>Cargando, por favor espere...</div>
+      <div id='descripcion_loading' class='descripcion_loading'></div>
+    </div>
+  </body>
+
+  <script type='text/javascript'>
+
+    var app = {
+      diasParaCargaRetomable: 7,
+      caracteresMinimosParaVehiculo: 7,
+      caracteresMinimosParaUsuario: 3,
+      caracteresDeAlbaran: 6,
+      caracteresDeContenedor: 7,
+      debugMode: true,
+    }
+
+    var datos = {
+      usuario: "",
+      vehiculo: "",
+      box: "",
+      id_carga: 0,
+      cargaRetomada: false,
+      albs: [],
+      contenedoresSinFinalizar: [],
+      progreso: 0,
+      cantidadContenedores: 0,
+      cantidadContenedoresCompletados: 0,
+      historial: [],
+      capa: {
+        capaActual: "Virgen",
+        capaAnterior: "Virgen",
+        superCapa: "",
+      },
+      contenidoLog: "",
+    };
+
+    $('input#usuarioLogin').each(function() {
+      var elem = $(this);    
+
+      // Save current value of element
+      elem.data('oldVal', elem.val());
+
+      // Look for changes in the value
+      elem.bind("propertychange change click keyup input paste", function(event){
+        // If value has changed...
+        if (elem.val().includes(".;.")) {
+          // Updated stored value
+          elem.data('oldVal', elem.val());
+          leerUsuario();
+        }
+      });
+    });
+
+    $('input#vehiculoLogin').each(function() {
+      var elem = $(this);
+      // Save current value of element
+      elem.data('oldVal', elem.val());
+      // Look for changes in the value
+      elem.bind("propertychange change click keyup input paste", function(event){
+        // If value has changed...
+        if (elem.val().includes(".;.")) {
+          // Updated stored value
+          elem.data('oldVal', elem.val());
+          leerVehiuclo();
+        }
+      });
+    });
+
+    $('input#entrarAlbaranContenedor').each(function() {
+     
+		var elem = $(this);
+		// Save current value of element
+		elem.data('oldVal', elem.val());
+		// Look for changes in the value
+		elem.bind("propertychange change click keyup input paste", async function(event){
+		// If value has changed...
+		if (elem.data('oldVal') != elem.val() && elem.val().includes(".;.")) {
+			// Updated stored value
+			elem.data('oldVal', elem.val());
+			await leerAlbaranContenedor();
+			}
+		});
+    });
+    
+    $(document).ready(function() {
+      
+		mostrarCapa("usuario");
+
+		let texto = "<div id='info' align='center' class='info'>";
+		texto +="<span class='nombre info'>"+datos.usuario+"</span>";
+		texto +="<span class='vehiculo info'>"+datos.vehiculo+"</span>";
+		texto +="<span class='box info'>"+datos.box+"</span>";
+		texto +="<button class='botonRefrescar' onClick='refrescar()'><img src='refresh.png' width='15' height='15'></button>";
+		texto +="<span class='id info'>"+datos.id_carga+"</span>";
+		texto +="&nbsp;</div>"; 
+		$("div#cabecera").append(texto);   
+
+		$(document).keydown(async function(e) {
+			
+			await estableceFoco();        
+		});
+
+		$("button#botonMostrarTeclado").click(function(){
+
+			mostrarCapa("teclado");
+		});
+
+		$("#usuarioLogin").keypress(function(e){
+			if ( e.which == 13 ) {          
+				e.preventDefault();
+				leerUsuario();       
+			}
+		}); 
+
+		$("#boxLogin").keypress(function(e){
+			if ( e.which == 13 ) {          
+				e.preventDefault();
+				datos.box = $("input#boxLogin").val();
+				refrescarCabecera();
+				mostrarCapa("main");  
+			}
+		}); 
+
+		$("#vehiculoLogin").keypress(async function( e ) {
+			if (e.which == 13) {
+				e.preventDefault();
+				leerVehiuclo();
+			}
+		});
+
+		$("#entrarAlbaranContenedor").keypress(function( e ) {     
+			if ( e.which == 13 ) {
+				e.preventDefault();
+				leerAlbaranContenedor();
+			}
+		});
+
+		$('div#main button#buttonNuevaCarga').click(function() { 
+			$("div#vehiculoForm").show();
+			mostrarCapa("vehiculo");
+		});
+
+		$('div#main button#buttonRetomarCarga').click(function() {
+			
+			datos.cargaRetomada = true;
+			$("div#vehiculoForm").show();
+			mostrarCapa("vehiculo");
+		});
+
+		$('div#teclado button#aceptarError').click(function() {
+			
+			let codigo = document.getElementById("campo_clave").value;
+			switch(datos.capa.capaAnterior){
+				case "usuario": 
+					document.getElementById("usuarioLogin").value = codigo;
+					mostrarCapa(datos.capa.capaAnterior);
+					leerUsuario();
+				break;
+				case "vehiculo": 
+					document.getElementById("vehiculoLogin").value = codigo;
+					mostrarCapa(datos.capa.capaAnterior);
+					leerVehiuclo();
+				break;
+				case "albaranes": 
+					document.getElementById("entrarAlbaranContenedor").value = codigo;
+					mostrarCapa(datos.capa.capaAnterior);
+					leerAlbaranContenedor();
+				break;
+			}
+
+			document.getElementById("campo_clave").value = "";
+		});
+
+		$('div#teclado button#volverTeclado').click(function(){
+
+			mostrarCapa(datos.capa.capaAnterior);
+		});
+
+		$('div#error button#aceptarError').click(function() {
+			
+			document.getElementById("vehiculoLogin").value = "";
+			mostrarCapa(datos.capa.capaAnterior);
+		});
+
+		$("button#botonFinalizar").click(async function(){
+
+			let titulo = "Confirmar Finalizado"
+			let descripcion = "Vas a finalizar con todos los contenedores escaneados. Confirma si quieres finalizar la carga."
+			await generarEvento(titulo, null, descripcion, 'FINALIZADO_COMPLETO', "finalizar");
+			let texto = "<h1>Has finalizado la carga "+datos.id_carga+"</h1>";
+			$("h1#tituloFinalizar").append(texto);
+			let carga = await obtenerCarga(datos.id_carga);
+			let fechaFinal = await conusltarFechaFinal(datos.id_carga);
+			let fechaInicial = preparaFecha(carga.fecha_hora);
+			let duracion = await calcularDiferenciaFechas(fechaInicial, fechaFinal);
+			texto = "<p>Has leido "+datos.albs.length+" albaran/es, con un total de "+datos.cantidadContenedores+" contenedor/es de los cuales has escaneado "+datos.cantidadContenedoresCompletados+". La duración de la carga ha sido de "+duracion+".";
+			$("p#textoFinalizar").append(texto);
+			mostrarCapa("finalizar");
+		});
+
+		$('div#errorFinalizar button#aceptarError').click(function() { 
+			
+			mostrarCapa('albaranes'); 
+		});
+
+		$('div#confirmarFinalizado button#aceptarError').click(function() { 
+			
+			mostrarCapa('albaranes'); 
+		});
+
+		$('div#errorContenedor button#aceptarError').click(function() { 
+			
+			mostrarCapa('albaranes'); 
+		});
+
+		$('#buttonConfirmarCarga').click(async function() {  
+			if(datos.cargaRetomada == true){
+				let r = confirm("Retomar la carga?");
+				if(r == true){
+					mostrarCapa("loading");
+					carga = await obtenerCarga(datos.id_carga);
+					carga.albaranes.forEach(function (alb){
+						mostrarFichaAlbaran(alb.codigo_albaran, "albaranes");
+					});
+					mostrarCapa("albaranes"); 
+				}else{            
+					document.getElementById("usuarioLogin").value = "";        
+					document.getElementById("vehiculoLogin").value = "";
+					document.getElementById("boxLogin").value = "";
+					datos.usuario = "";
+					datos.vehiculo = "";
+					datos.box = "";
+					datos.albs = [];
+					$(".fichaAlbaran").remove();
+					datos.cantidadContenedores = 0;
+					datos.cantidadContenedoresCompletados = 0;
+					datos.id_carga = 0;
+					datos.cargaRetomada = false;
+					refrescarCabecera();
+					mostrarCapa("usuario");;
+				}                    
+			}else{
+				generarNuevaCarga();
+			}
+		});
+
+		$("#buttonCancelarGenerarCarga").click(function() {
+			document.getElementById("usuarioLogin").value = "";        
+			document.getElementById("vehiculoLogin").value = "";
+			document.getElementById("boxLogin").value = "";
+			datos.usuario = "";
+			datos.vehiculo = "";
+			datos.box = "";
+			datos.albs = [];
+			$(".fichaAlbaran").remove();
+			datos.cantidadContenedores = 0;
+			datos.cantidadContenedoresCompletados = 0;
+			datos.id_carga = 0;
+			datos.cargaRetomada = false;
+			refrescarCabecera();
+			mostrarCapa("usuario");
+		});
+
+		$("div#albaranes #buttonFinalizar").click(async function() {
+			if (comprobarFinalizado() == true){
+				let titulo = "Confirmar Finalizado"
+				let descripcion = "Vas a finalizar con todos los contenedores escaneados. Confirma si quieres finalizar la carga."
+				document.getElementById("tituloConfirmarFinalizado").innerHTML = titulo;
+           		document.getElementById("descripcionConfirmarFinalizado").innerHTML = descripcion;
+				mostrarCapa("confirmarFinalizado");
+			}else{
+				let descripcion = 'No has finalizado, te quedan ' +datos.contenedoresSinFinalizar.length+ ' contenedor/es por escanear!'+
+				' Si quieres finalizar igualmente pulsa finalizar. Si no quieres finalizar pulsa volver.';
+				let titulo = 'No has finalizado!';
+				document.getElementById("tituloErrorFinalizar").innerHTML = titulo;
+				document.getElementById("descripcionErrorFinalizar").innerHTML = descripcion;
+				mostrarCapa("errorFinalizar");
+			}
+		});
+
+		$("div#errorFinalizar #buttonFinalizar").click(async function() {        
+			
+			let descripcion = "Ha finalizado la carga con "+datos.contenedoresSinFinalizar.length+" contenedor/es por escanear."
+			await generarEvento('No has finalizado!', datos.contenedoresSinFinalizar, descripcion, 'FINALIZADO_INCOMPLETO', "finalizar")
+			let texto = "<h1>Has finalizado la carga "+datos.id_carga+"</h1>";
+			$("h1#tituloFinalizar").append(texto);
+			let carga = await obtenerCarga(datos.id_carga);
+			let fechaFinal = await conusltarFechaFinal(datos.id_carga);
+			let fechaInicial = preparaFecha(carga.fecha_hora);
+			let duracion = await calcularDiferenciaFechas(fechaInicial, fechaFinal);
+			texto = "<p>Has leido "+datos.albs.length+" albaran/es, con un total de "+datos.cantidadContenedores+" contenedor/es de los cuales has escaneado "+datos.cantidadContenedoresCompletados+". La duración de la carga ha sido de "+duracion+".";
+			$("p#textoFinalizar").append(texto);
+			mostrarCapa("finalizar");
+		});
+
+		$("button#buttonHistorial").click(async function(){
+
+			$("tr#tablaHistorial").remove();
+			await obtenerHistorialCargas();  
+			await obtenerHistorialAlbaranes();
+			await obtenerHistorialContenedores();
+			await obtenerHistorialEventos();
+			datos.historial = await ordenarHistorial();
+
+			let texto = "";
+			datos.historial.forEach(function(dato){
+				texto += "<tr id='tablaHistorial'><td>"+dato.dato+"</td><td>"+dato.fecha_hora+"</td></tr>"
+			});
+				
+			$("table#tablaHistorial").append(texto);
+			mostrarCapa("historial");
+			datos.historial = [];
+		});
+
+		$("button#volverHistorial").click(function(){
+
+			mostrarCapa("albaranes");
+		});
+
+		$("button#boxBoton").click(function(){
+
+			datos.box = $("input#boxLogin").val();
+			refrescarCabecera();
+			mostrarCapa("main");
+		});
+    });
+
+    //Hacer lectura del usuario entrado y comprobar que sea correcto
+    function leerUsuario(){
+		extra = document.getElementById('usuarioLogin').value;
+		if(extra.length < app.caracteresMinimosParaUsuario) {
+			descripcion = `El nombre de usuario debe contener por lo menos ${app.caracteresMinimosParaUsuario} carácteres, asegúrate de haber escaneado el código correcto, pulsa para volver a intentarlo.`; 
+			generarEvento('USUARIO INCORRECTO', extra, descripcion, 'USUARIO_INCORRECTO', "error");
+			document.getElementById('usuarioLogin').value = '';
+			let audio = document.getElementById("audioError");
+			audio.pause();
+			audio.currentTime = 0;
+			audio.play();
+		} else {
+			datos.usuario = formatear(document.getElementById('usuarioLogin').value);
+			datos.contenidoLog = datos.usuario;
+			refrescarCabecera();
+			creaLog("Usuario "+datos.usuario+" escaneado");
+			mostrarCapa("box");
+			let audio = document.getElementById("audioCorrecto");
+			audio.pause();
+			audio.currentTime = 0;
+			audio.play();
+		}  
+
+    }
+    //Hacer lecura del vehiculo entrado y comprobar que sea correcto
+    async function leerVehiuclo(){
+		datos.capa.superCapa = "";
+		extra = document.getElementById("vehiculoLogin").value;
+		if (extra.length < app.caracteresMinimosParaVehiculo){
+			generarEvento('VEHICULO INCORRECTO', extra,`El idetificador del vehículo debe contener por lo menos ${app.caracteresMinimosParaVehiculo} carácteres, asegúrate de haber escaneado el código correcto, pulsa para volver a intentarlo.`, 'VEHICULO_INCORRECTO', "error");
+			document.getElementById('vehiculoLogin').value = '';
+			let audio = document.getElementById("audioError");
+			audio.pause();
+			audio.currentTime = 0;
+			audio.play();
+		} else {
+			datos.vehiculo = formatear(document.getElementById("vehiculoLogin").value).toUpperCase();
+			//Retomar carga
+			if (datos.cargaRetomada == true){
+				document.getElementById("buttonConfirmarCarga").innerHTML = "Retomar";
+				//Comprobar vehiculo para retomar
+				let cargas = await obtenerCargasRetomables(datos.vehiculo);
+				if (cargas.length==0){
+					datos.capa.superCapa = "main";
+					generarEvento("VEHICULO INEXISTENTE", datos.vehiculo, "El vehiculo "+datos.vehiculo+" no existe o no tiene ninguna carga para retomar, pulsa para volver a intentarlo.", "VEHICULO_INEXISTENTE", "error");
+					datos.cargaRetomada = false;
+					let audio = document.getElementById("audioError");
+					audio.pause();
+					audio.currentTime = 0;
+					audio.play();
+				} else { 
+					refrescarCabecera(); 
+					$("div#vehiculoForm").hide();
+					$("div#infoAlbaranes").show();
+					mostrarCargasRetomables(cargas); 
+					let audio = document.getElementById("audioCorrecto");
+					audio.pause();
+					audio.currentTime = 0;
+					audio.play();               
+				}
+			}else{
+				document.getElementById("buttonConfirmarCarga").innerHTML = "Confirmar";
+				let audio = document.getElementById("audioCorrecto");
+				audio.pause();
+				audio.currentTime = 0;
+				audio.play();
+				//Carga nueva 
+				refrescarCabecera();
+				document.getElementById("usuarioConfirmar").innerHTML = datos.usuario;
+				document.getElementById("vehiculoConfirmar").innerHTML = datos.vehiculo;
+				document.getElementById("boxConfirmar").innerHTML = datos.box;
+				document.getElementById("descripcionConfirmar").innerHTML = "Datos introducidos para usuario, vehículo y box, confirme o cancele si no son correctos."
+				$("div#infoAlbaranes").hide();
+				datos.contenidoLog = datos.vehiculo;
+				creaLog("Vehiculo "+datos.vehiculo+" escaneado");
+				mostrarCapa("confirmar");
+			}
+		}
+	}
+    //console.log()
+    function imprime(texto,color = 'lightgreen') {
+		if  (app.debugMode == true){
+			console.log('%c' + texto, 'color:' + color + ';');
+		} 
+    }
+    //Refreca la informacion de la cabecera
+    function refrescarCabecera(){
+		$("div#info").remove(); 
+		let texto = "<div id='info' align='center' class='info'>";
+		texto +="<span class='nombre info'>"+datos.usuario+"</span>";
+		texto +="<span class='vehiculo info'>"+datos.vehiculo+"</span>";
+		texto +="<span class='box info'>"+datos.box+"</span>";
+		texto +="<button class='botonRefrescar'><img src='refresh.png' width='15' height='15'></button>";
+		texto +="<span float='right' class='id info'>"+datos.id_carga+"</span>";
+		texto +="&nbsp;</div>";    
+		$("div#cabecera").append(texto);
+    }
+    //Obtiene todos los usuario y vehiculos leidos de la carga y los añade a la tabla historial 
+    async function obtenerHistorialCargas(){
+		sql = `select usuario, vehiculo, fecha_hora from cargas where id = ${datos.id_carga}`;
+		let resultado = [];
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				mostrarCapa("loading")
+				$("#descripcion_loading").html("Obteniendo datos de cargas para historial...");
+			},
+			success:function(data){ 
+
+				data.forEach(function (d){
+
+					objetoResultado = new Object();
+					objetoResultado.dato = d.usuario
+					objetoResultado.fecha_hora = d.fecha_hora
+					resultado.push(objetoResultado);
+					objetoResultado = new Object();
+					objetoResultado.dato = d.vehiculo
+					objetoResultado.fecha_hora = d.fecha_hora
+					resultado.push(objetoResultado);
+				});          
+			},
+		});
+		datos.historial.push(resultado);
+    }
+    //Obtiene todos los albaranes leidos de la carga y los añade a la tabla historial
+    async function obtenerHistorialAlbaranes(){
+		sql = `select codigo_albaran as dato, fecha_hora from albaranes where id_carga = ${datos.id_carga}`;
+		let resultado;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				mostrarCapa("loading")
+				$("#descripcion_loading").html("Obteniendo datos de albaranes para historial...");
+			},
+			success:function(data){ 
+
+				resultado = data;
+
+			},
+		});
+		if (resultado != false){
+			datos.historial.push(resultado);
+		}
+    }
+    //Obtiene todos los contendores leidos de la carga y los añade a la tabla historial
+    async function obtenerHistorialContenedores(){
+		sql = `select codigo_contenedor as dato, fecha_hora from contenedores where id_carga = ${datos.id_carga}`;
+		let resultado;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				mostrarCapa("loading")
+				$("#descripcion_loading").html("Obteniendo datos de contenedores para historial...");
+			},
+			success:function(data){ 
+
+					resultado = data;           
+			},
+		});
+		if (resultado != false){
+			datos.historial.push(resultado);
+		}
+    }
+    //Obtiene todos los eventos de la carga y los añade a la tabla historial
+    async function obtenerHistorialEventos(){
+    	sql = `select alias, extra, fecha_hora from eventos where id_carga = ${datos.id_carga}`;
+    	let resultado = [];
+    	let titulo = "";
+    	await $.ajax({
+    		url:'http://localhost/CargaCamiones/mysql.php',
+    		data: {dbname: 'control_carga', query:sql},
+    		type:'POST',
+    		beforeSend:function(){
+    			mostrarCapa("loading");
+    			$("#descripcion_loading").html("Obteniendo datos de eventos para historial...");
+    		},
+    		success:function(data){
+
+    			if (data != false){
+    				data.forEach(function(d){
+
+    					descripcion = preparaDescripcion(d.alias, d.extra);
+    					objetoResultado = new Object();
+    					objetoResultado.dato = descripcion;
+    					objetoResultado.fecha_hora = d.fecha_hora;
+    					resultado.push(objetoResultado);
+    				});
+    			}else{
+    				resultado = false;
+    			}
+    		},
+    	});
+    	if (resultado != false){
+    		datos.historial.push(resultado);
+    	}
+    }
+    //Ordena el historial de mas antiguo a más nuevo
+    function ordenarHistorial(){
+
+    	let historialOrdenado = [];
+    	let ordenado = false;
+    	let posi = 0;
+    	let posy = 0;
+
+   		while (ordenado == false){
+   			posi = 0;
+   			posy = 0;
+	    	let min = datos.historial[0][0].fecha_hora;
+	    	for (let i = 0; i < datos.historial.length; i++) {
+	    		d = datos.historial[i];
+	    		for (let y = 0; y < d.length; y++) {
+	    			dato = d[y];
+	    			if (dato.fecha_hora < min){
+
+	    				min = dato.fecha_hora;
+	    				posi = i;
+	    				posy = y;
+	    			}
+	    		}
+	    	}
+	    	historialOrdenado.push(datos.historial[posi][posy]);
+	    	datos.historial[posi].splice(posy, 1);
+	    	if (datos.historial[posi].length == 0){
+	    		datos.historial.splice(posi, 1);
+	    	}
+	    	if (datos.historial.length == 0){
+	    		ordenado = true;
+	    	}
+	    }
+	    return historialOrdenado;
+    }
+    //Prepara la descripcion de la tabla de eventos según el tipo de alias.
+	function preparaDescripcion(alias, extra){
+
+		let titulo = "";
+
+		switch(alias){
+
+			case "CODIGO_INCORRECTO": titulo = "El codigo escaneado no corresponde ni a un albaran ni a un contenedor.";
+			break;
+			case "FINALIZADO_INCOMPLETO": titulo = "Ha finalizado la carga aún con contenedores sin escanear.";
+			break;
+			case "FINALIZADO_COMPLETO": titulo = "Ha finalizado la carga con todos los contenedores escaneados.";
+			break;
+			case "USUARIO_INCORRECTO": titulo = "El nombre de usuario contiene menos de 5 caracteres.";
+			break;
+			case "VEHICULO_INCORRECTO": titulo = "El vehiculo contiene menos de 5 caracteres.";
+			break;
+			case "VEHICULO_INEXISTENTE": titulo = "El vehiculo "+extra+" no contiene ninguna carga retomable.";
+			break;
+			case "ALBARAN_YA_ESCANEADO": titulo = "El albaran "+extra+" ya ha sido escaneado previamente.";
+			break;
+			case "ALBARAN_INEXISTENTE": titulo = "No se ha localizado el albaran "+extra+".";
+			break;
+			case "CONTENEDOR_YA_ESCANEADO": titulo = "El contenedor "+extra+" ya ha sido escaneado previamente.";
+			break;
+			case "CONTENEDOR_INCORRECTO": titulo = "El contenedor "+extra+" no existe o no pertenece a ningún albaran escaneado.";
+			break;
+			case "ALBARAN_BORRADO": titulo = "El albaran "+extra+" ha sido borrado.";
+			break;
+			case "ALBARAN_CORRECTO": titulo = "El albaran "+extra+" ha sido escaneado correctamente";
+			break;
+			case "CONTENEDOR_CORRECTO": titulo = "El contenedor "+extra+" ha sido escaneado correctamente";
+			break;
+		}
+
+		return titulo;
+	}
+	//Obtiene el albaran y el pedido del contenedor, despues de escanearlo y que no pertenezca a ningun albaran escaneado
+    async function obtenerInfoContenedor(contenedor){
+
+    	sql = `select codigo_albaran, codigo_pedido from contenedores where codigo = '${contenedor}'`;
+    	let info = false;
+    	await $.ajax({
+    		url:'http://localhost/CargaCamiones/mysql.php',
+    		data:{dbname: 'inventario', query:sql},
+    		type:'POST',
+    		beforeSend:function(){
+    			mostrarCapa("loading");
+    			$("#descripcion_loading").html("Buscando información del contenedor "+contenedor+"...");
+    		},
+    		success:function(data){
+    			if (data != false){
+    				info = data[0];
+    			}
+    		}
+    	});
+    	return info;
+    }
+    //Busca y obtinene informacion de la carga que contiene el albaran pasado.
+    async function obtenerIdCargaAlbaran(albaran){
+    	sql = `select id_carga from albaranes where codigo_albaran = '${albaran}'`;
+    	let resultado = "";
+    	await $.ajax({
+    		url:'http://localhost/CargaCamiones/mysql.php',
+    		data: {dbname: 'control_carga', query:sql},
+    		type:'POST',
+    		beforeSend:function(){
+    			mostrarCapa("loading");
+    			$("#descripcion_loading").html("Obteniendo la id de la carga que contiene el albaran "+albaran+"...");
+    		},
+    		success:function(data){
+    			if (data != false){
+    				resultado = data[0];
+    			}else{
+    				resultado = false;
+    			}
+    		}
+    	});
+    	return resultado;
+    }
+    //Obtiene la información de la carga que contiene la id pasada
+    async function obtenerInfoCargaAlbaran(id){
+    	sql = `select usuario, vehiculo, box from cargas where id = '${id}'`;
+    	let resultado = "";
+    	await $.ajax({
+    		url:'http://localhost/CargaCamiones/mysql.php',
+    		data: {dbname: 'control_carga', query:sql},
+    		type:'POST',
+    		beforeSend:function(){
+    			mostrarCapa("loading");
+    			$("#descripcion_loading").html("Obteniendo la información de la carga con la id "+id+"...");
+    		},
+    		success:function(data){
+    			resultado = data[0];
+    		}
+    	});
+    	return resultado;
+    }
+    //Busca en eventos de la carga si existe un evento "Finalizado" y retorna true o false
+    async function comprobarCargaFinalizada(id){
+    	sql = `select id from eventos where id_carga = '${id}' and (alias = 'FINALIZADO_COMPLETO' or alias = 'FINALIZADO_INCOMPLETO')`;
+    	let resultado = false;
+    	await $.ajax({
+    		url:'http://localhost/CargaCamiones/mysql.php',
+    		data: {dbname: 'control_carga', query:sql},
+    		type:'POST',
+    		beforeSend:function(){
+    			mostrarCapa("loading");
+    			$("#descripcion_loading").html("Comprobando si la carga con id "+id+" está finalizada...");
+    		},
+    		success:function(data){
+    			if (data != false){
+    				resultado = true;
+    			}
+    		}
+    	});
+    	return resultado;
+    }
+    //Extraer todas las cargas de un vehiculo dado
+    async function obtenerCargasRetomables(vehiculo){
+
+		sql = `select id from cargas where vehiculo = '${vehiculo}' and fecha_hora between adddate(now(),-${app.diasParaCargaRetomable}) and now();`;
+		let cargas = [];
+		let resultado = false;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				mostrarCapa("loading")
+				$("#descripcion_loading").html("Comprobando vehiculo...");
+			},
+			success:function(data){ 
+				if (data != false){
+					resultado = data;           
+				}
+			},
+		});    
+		if (resultado != false){
+			for (let i = 0; i < resultado.length; i++) {
+				cargas.push(await obtenerCarga(resultado[i].id));
+			}
+		}
+		mostrarCapa("vehiculo");
+		return cargas;
+    }
+    //Extraer todos los datos de una carga
+    async function obtenerCarga(id_carga) {
+      
+		sql = `select * from cargas where id = ${id_carga}`;
+		let carga = false;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				$("#descripcion_loading").html("Comprobando carga");
+			},
+			success:function(data){
+				if (data != false){
+					carga = data[0]
+				}    
+			}
+		}); 
+		if (carga != false){
+			carga.fecha_larga = fechaLarga(carga.fecha_hora);
+			carga.albaranes = await obtenerAlbaranes(carga.id);
+		}
+		return carga;
+    }    
+    //Seleccionar albaranes para retomar
+    async function obtenerAlbaranes(id_carga){
+		sql = `select codigo_albaran from albaranes where id_carga = '${id_carga}';`;
+		let albaranes = false;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				$("#descripcion_loading").html("Comprobando albaranes de la carga");
+			},
+			success:function(data){
+				if (data != false){          
+					albaranes = data;
+				}          
+			}
+		});
+		if (albaranes != false){
+			for (let i = 0; i < albaranes.length; i++) {
+				albaranes[i].contenedores = await obtenerContenedores(albaranes[i].codigo_albaran);
+				albaranes[i].contenedores_leidos = await obtenerContenedoresLeidos(id_carga,albaranes[i].codigo_albaran);
+			}
+		}
+		return albaranes;
+    }
+    //Selecciona toda la informacion del albaran
+    async function sacarInformacionAlbaran(albaran){
+
+		sql = "Select albaranes.codigo, albaranes.codigo_cliente, albaranes.fecha, clientes.nombre from albaranes, clientes where albaranes.codigo='"+ albaran +"' and clientes.codigo = albaranes.codigo_cliente"; 
+		let info = false;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'inventario', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				$("#descripcion_loading").html("Sacando toda la informacion del albaran");
+			},
+			success: function(data){
+				if (data != false){
+					info = data;
+				}				
+			}        
+		});
+		return info;
+    }
+
+    //Obtener los contendores del albaran
+    async function obtenerContenedores(albaran){
+		sql = `Select codigo as contenedor from contenedores where codigo_albaran = '${albaran}'`;
+		let contenedores = [];
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data:{dbname: 'inventario', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				$("#descripcion_loading").html("Buscando contendores del albaran " + albaran);
+			},
+			success:function(data) {
+				if (data != false){
+					data.forEach(function(d) {
+						contenedores.push(d.contenedor.trim());
+					});
+				}
+			}
+		});
+		return contenedores;  
+    }
+    //Seleccionar los contenedores leidos
+    async function obtenerContenedoresLeidos(id, albaran){
+		sql = `select codigo_contenedor from contenedores where id_carga = '${id}' and codigo_albaran = '${albaran}';`;
+		let contenedores_leidos = [];
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			success:function(data){
+				if (data != false){
+					data.forEach(function (d){
+					  contenedores_leidos.push(d.codigo_contenedor);
+					})
+				}
+			},
+			beforeSend:function() {
+				$("#descripcion_loading").html("Seleccionando los cotendores para retomar");
+			}
+		});
+		return contenedores_leidos;
+    }
+    //Formatear una fecha
+    //Ej. entrada: 2020-07-08 10:09:25
+    //El. salida: Miercoles, 8 de Julio de 2020 a las 10:09
+    function fechaLarga(fecha) {
+
+		var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+		var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
+		f = new Date(fecha);
+		return diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear() + " a las " + fecha.substring(11,16);; 
+    }
+    //recibe un dato del codigo de barras y lo prepara para su uso (Quitar el '-' y el '.;.')
+    //Ej. entrada: -11123823.;.
+    //Ej. salida: 11123823
+    function formatear(dato){
+
+		if (dato.charAt(0) == '-'){
+			longitud = dato.length - 3;
+			datoTratado = dato.substring(1, longitud);
+		}else{
+			datoTratado = dato;
+		}
+		return datoTratado;
+    } 
+    //Comprueba que el albaran no sea repetido
+    async function comprobarAlbaranRepetido(albaran){
+		
+		sql = "select * from albaranes where id_carga = " + datos.id_carga + " and codigo_albaran ='" + albaran + "'";
+		let repetido = false;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {query:sql,dbname:'control_carga'},
+			type:'POST',
+			beforeSend:function() {
+				$("#descripcion_loading").html("Comprobando si el albaran "+albaran+" de la carga "+datos.id_carga+" ya ha sido escaneado.");
+			},
+			success: function(data){
+				if (data.length > 0){
+					repetido = true;
+				}
+			}
+		});
+		return repetido;
+    }
+    //Inserta el albaran en la base de datos
+    async function insertarAlbaran(albaran){
+
+		sql = `INSERT into albaranes (id_carga, codigo_albaran) VALUES (${datos.id_carga}, '${albaran}')`;
+		let finalizado = false;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				$("#descripcion_loading").html("Guardando albaran "+albaran+" en la carga "+datos.id_carga+".");
+			},
+			success:function(data) {  
+				finalizado = true;           
+			}                            
+		});
+		return finalizado;
+    }
+    //Inserta el contenedor en la base de datos
+    async function insertarContenedor(contenedor, albaran){
+
+		sql = `INSERT into contenedores (id_carga, codigo_albaran, codigo_contenedor) VALUES (${datos.id_carga}, '${albaran}', '${contenedor}')`;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				$("#descripcion_loading").html("Insertando el contenedor "+contenedor+".");
+			}
+		});
+    }    
+    //Inserir la carga 
+    async function generarNuevaCarga() { 
+
+		sql = `INSERT INTO cargas (usuario, vehiculo, box) VALUES ('${datos.usuario}','${datos.vehiculo}','${datos.box}');`;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				$("#descripcion_loading").html("Insertando la carga");
+			},
+			success:function(data){
+				console.log("Todo bien");
+			}
+		});
+		await getMaxId();
+		refrescarCabecera();
+		mostrarCapa("albaranes");
+    }   
+    //Select el ultimo id de carga añadido
+    async function getMaxId() {
+      
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:`SELECT MAX(ID) as maximo FROM CARGAS`},
+			type:'POST',
+			beforeSend:function() {
+				$("#descripcion_loading").html("Seleccionando la id de la carga");
+			},
+			success:function(data) {
+				imprime("Id de la carga atual: "+parseInt(data[0].maximo));  
+				datos.id_carga = data[0].maximo;
+			}
+		});
+    }
+    //Insertar en eventos el error
+    async function generarEvento(titulo, extra, descripcion, alias, difCapa){
+
+		sql = `INSERT into eventos (id_carga, alias, descripcion, extra) VALUES (${datos.id_carga},'${alias}','${descripcion}','${extra}')`;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			beforeSend:function() {
+				$("#descripcion_loading").html("Insertando el evento, titulo: "+titulo+" , dato: "+extra);
+			},
+			success:function(data) {  
+				
+			}
+		});
+		
+		if (difCapa == "contenedor"){
+			let infoContenedor = await obtenerInfoContenedor(extra);
+			if (infoContenedor == false){
+				descripcion = "El contenedor "+extra+" no está asignado a ningún albaran. Revisar la etiqueta del contenedor."
+			}else{
+				if (infoContenedor.codigo_albaran.includes("#")){
+					
+				}else{
+					let infoAlbaran = await sacarInformacionAlbaran(infoContenedor.codigo_albaran);
+					let fecha = preparaFecha(infoAlbaran[0].fecha);
+					descripcion = "El contenedor "+extra+" no pertenece a ningún albaran escaneado. Este contenedor pertenece al albaran "+infoContenedor.codigo_albaran+" del pedido "+infoContenedor.codigo_pedido.trim()+". Información del albaran "+infoContenedor.codigo_albaran+": cliente: "+infoAlbaran[0].codigo_cliente.trim()+", nombre: "+infoAlbaran[0].nombre.trim()+", fecha: "+fecha.trim()+".";
+					let idCargaAlbaran = await obtenerIdCargaAlbaran(infoContenedor.codigo_albaran);
+					if (idCargaAlbaran != false){
+						
+						let infoCargaAlbaran = await obtenerInfoCargaAlbaran(idCargaAlbaran.id_carga);
+						let cargaFinalizada = await comprobarCargaFinalizada(idCargaAlbaran.id_carga);
+						if (cargaFinalizada == true){
+							descripcion += " Este albaran fué cargado por "+infoCargaAlbaran.usuario+" en el vehiculo "+infoCargaAlbaran.vehiculo+" en el box "+infoCargaAlbaran.box+".";
+						}else{
+							descripcion += " Este contenedor pertenece a una carga en curso que se está efectuando en el box "+infoCargaAlbaran.box+" por el usuario "+infoCargaAlbaran.usuario+" con el vehciulo "+infoCargaAlbaran.vehiculo+".";
+						}
+					}
+					descripcion += " Si quiere volver pulse aceptar.";
+				}
+			}
+
+			document.getElementById("tituloErrorContenedor").innerHTML = titulo;
+			document.getElementById("descripcionErrorContenedor").innerHTML = descripcion;
+
+			mostrarCapa("errorContenedor");
+		}
+
+		if (difCapa == "error"){
+			document.getElementById("tituloError").innerHTML = titulo;
+			document.getElementById("descripcionError").innerHTML = descripcion;
+			mostrarCapa("error");
+		}
+    }
+    //Crea un log visual del contenido escaneado
+    function creaLog(contenido) {
+		$("div#logNuevo").remove();
+		$("div#logTemporal").delay(3000).slideUp(1000);
+		texto = "<div id='logNuevo' class='logPermanente'>Ultimo escaneo: "+datos.contenidoLog+"</div>";
+		$("div#logPermanente").append(texto);
+		let elemento = document.getElementById("logNuevo");
+		let inicio = {r: 0, g: 255, b: 0};
+		let final = {r: 255, g: 255, b: 255};
+		degradadoVerde(elemento, "background-color", inicio, final, 5000);
+    }
+    function lerp(a, b, u){
+    	
+    	return (1-u)*a+u*b;
+    }
+    function degradadoVerde(elemento, propiedad, inicio, final, duracion){
+
+    	let interval = 20;
+    	let paso = duracion / interval;
+    	let paso_u = 1.0/paso;
+    	let u = 0.0;
+    	let theInterval = setInterval(function(){
+    		if (u >= 5.0){ clearInterval(theInterval)}
+    		let r = parseInt(lerp(inicio.r, final.r, u));
+    		let g = parseInt(lerp(inicio.g, final.g, u));
+    		let b = parseInt(lerp(inicio.b, final.b, u));
+    		let colorname = 'rgb('+r+','+g+','+b+')';
+    		elemento.style.setProperty(propiedad, colorname);
+    		u += paso_u;
+    	}, interval); 
+    }
+    //Comprobar si se lee un albaran o un contenedor
+    async function leerAlbaranContenedor(){
+
+		let dato = formatear(document.getElementById("entrarAlbaranContenedor").value);
+		if(dato.length > app.caracteresDeAlbaran && dato.length != app.caracteresDeContenedor) {
+			let alias = "CODIGO_INCORRECTO";
+			let titulo = "CÓDIGO INCORRECTO";
+			let descripcion = "El codigo "+dato+" no corresponde ni a un albaran ni a un contenedor, asegurate de haber escaneado el código correcto, pulsa para volver atrás e intentarlo de nuevo."
+			generarEvento(titulo, dato, descripcion, alias, "error");
+			let audio = document.getElementById("audioError");
+			audio.pause();
+			audio.currentTime = 0;
+			audio.play();
+		} else {
+			if (dato.length <= app.caracteresDeAlbaran){
+				//ALBARAN 
+				let albaran = "";
+				let info = "";
+
+				albaran = dato;
+				console.log(albaran);
+				info = await sacarInformacionAlbaran(albaran);
+				console.log(info);
+				if (info.length != 0){
+					let objetoAlbaran = new Object();
+					objetoAlbaran.codigo = albaran;
+					objetoAlbaran.cliente = {codigo: info[0].codigo_cliente, nombre: info[0].nombre.trim()};
+					objetoAlbaran.fecha = info[0].fecha;                                      
+					let repetido = await comprobarAlbaranRepetido(albaran);
+					if (repetido == false){              
+						let cont = await obtenerContenedores(albaran);
+						if (cont.length == 0){
+							alert("El albaran "+dato+" no tiene contenedores.");
+							objetoAlbaran.completado = true;
+						}else{
+							objetoAlbaran.completado = false;
+							objetoAlbaran.contenedores = {esperados:[], escaneados:[]};
+							cont.forEach(function (cont){
+								objetoAlbaran.contenedores.esperados.push(cont);
+							});
+							imprime("Contendores esperados: "+objetoAlbaran.contenedores.esperados);
+							datos.cantidadContenedores += cont.length;
+							datos.progreso = (datos.cantidadContenedoresCompletados * 100) / datos.cantidadContenedores;
+							document.getElementById("barraProgreso").style = "width: "+datos.progreso+"%";
+							document.getElementById("barraProgreso").innerHTML = datos.progreso.toFixed(2)+"%";
+						}
+						await insertarAlbaran(albaran);
+						datos.albs.push(objetoAlbaran);
+						datos.contenidoLog = albaran;
+						creaLog("Albaran " + albaran + " escaneado");
+						generarEvento('ALBARAN CORRECTO', dato, 'El albaran '+dato+' ha sido escaneado correctamente.', 'ALBARAN_CORRECTO');
+						mostrarFichaAlbaran(albaran, "albaranes");
+						let audio = document.getElementById("audioCorrecto");
+						audio.pause();
+						audio.currentTime = 0;
+						audio.play();
+					} else {
+						generarEvento('ALBARAN YA ESCANEADO', dato, 'El ' + dato + ' ya ha sido escaneado, pulsa para volver atrás e intentarlo de nuevo.', 'ALBARAN_YA_ESCANEADO', "error");
+						let audio = document.getElementById("audioError");
+						audio.pause();
+						audio.currentTime = 0;
+						audio.play();
+					}
+				} else {
+					generarEvento('ALBARAN INEXISTENTE', dato, 'No se ha lozalizado el albaran '+dato+', no existe, asegúrate de haber escaneado el código correcto, pulsa para volver atrás e intentarlo de nuevo.', 'ALBARAN_INEXISTENTE', "error");
+					let audio = document.getElementById("audioError");
+					audio.pause();
+					audio.currentTime = 0;
+					audio.play();
+				}
+			}
+			if (dato.length == app.caracteresDeContenedor){
+				//Contenedor
+				let correcto = false;
+				let repetido = false;
+				let i = 0;
+				let albaran = "";
+				//Comprobar si no es repetido y añadirlo a contenedores leidos
+				while (i < datos.albs.length && correcto == false){
+					if (datos.albs[i].contenedores.esperados.includes(dato) == true){
+						//Comprobar si es repetido
+						if (datos.albs[i].contenedores.escaneados.includes(dato) == true){
+							repetido = true;
+						}
+						//Si no es repetido se añade a contenedores escaneados
+						if (repetido == false){
+							correcto = true;
+							albaran = datos.albs[i].codigo;
+							datos.albs[i].contenedores.escaneados.push(dato);
+						}else{
+							alias = "CONTENEDOR_YA_ESCANEADO";
+							descripcion = "El contenedor "+dato+" ya ha sido escaneado previamente, pulsa para volver atrás e intentarlo de nuevo.";
+							generarEvento('CONTENEDOR YA ESCANEADO', dato, descripcion, alias, "error");
+							let audio = document.getElementById("audioError");
+							audio.pause();
+							audio.currentTime = 0;
+							audio.play();
+						}
+						//Comprobar si este contenedor leido completa el albaran
+						if(datos.albs[i].contenedores.esperados.length == datos.albs[i].contenedores.escaneados.length){
+							datos.albs[i].completado = true;
+						}
+					}
+					i++;
+				}
+				//Si no es repetido y es un contenedor esperado se inserta en la tabla contenedores
+				if (correcto == true){
+					await insertarContenedor(dato, albaran);
+					datos.cantidadContenedoresCompletados++;
+					datos.contenidoLog = dato;
+					creaLog("Contenedor "+dato+" escaneado");
+					generarEvento('CONTENEDOR CORRECTO', dato, 'El contenedor '+dato+' ha sido escaneado correctamente.','CONTENEDOR_CORRECTO');          
+					datos.progreso = (datos.cantidadContenedoresCompletados * 100) / datos.cantidadContenedores;
+					document.getElementById("barraProgreso").style = "width: "+datos.progreso+"%";
+					document.getElementById("barraProgreso").innerHTML = datos.progreso.toFixed(2)+"%";
+					mostrarFichaAlbaran(albaran, "albaranes");  
+					let audio = document.getElementById("audioCorrecto");
+					audio.pause();
+					audio.currentTime = 0;
+					audio.play();
+				}else{
+					if (repetido == false){
+						let alias = "CONTENEDOR_INCORRECTO";      
+						let descripcion = "El contenedor "+dato+" no existe, o no has escaneado previamente el albaran al que pertenece, comprueba que el codigo sea el correcto, pulsa para volver atrás e intentarlo de nuevo."
+						generarEvento('CONTENEDOR INCORRECTO', dato, descripcion, alias, "contenedor");
+						let audio = document.getElementById("audioError");
+						audio.pause();
+						audio.currentTime = 0;
+						audio.play();
+					}
+				} 
+			}
+		}
+		document.getElementById("entrarAlbaranContenedor").value = "";
+    }
+    //Comprueba si ya se han leido todos los contenedores esperados y guarda los contenedores que faltan por escanear
+    function comprobarFinalizado(){
+      
+      let finalizado = true;
+      datos.contenedoresSinFinalizar = [];
+
+      datos.albs.forEach(function (alb){
+        if (alb.completado == false){
+          finalizado = false;
+          alb.contenedores.esperados.forEach(function (cont){
+            if (alb.contenedores.escaneados.includes(cont) == false){
+              datos.contenedoresSinFinalizar.push(cont);
+            }
+          })
+        }
+      })
+
+      return finalizado;
+    }    
+    //Carga todos los datos del vehiculo elegido generando todos los albranes y la pantalla de confirmacion
+    async function mostrarConfirmacionCarga(id_carga, total_contenedores, total_contenedores_leidos){
+
+      mostrarCapa("loading");
+      $("div#tituloRetomarCarga").remove();
+      $("div#cargas").remove();
+      $("div#botonCancelarRetomar").remove();      
+
+      imprime("Mostrando carga " + id_carga)
+      datos.id_carga = id_carga;
+      refrescarCabecera();
+      carga = await obtenerCarga(id_carga);
+
+      for (let i = 0; i < carga.albaranes.length; i++) {
+        let info = await sacarInformacionAlbaran(carga.albaranes[i].codigo_albaran);
+
+        let objetoAlbaran = new Object();
+        objetoAlbaran.codigo = carga.albaranes[i].codigo_albaran;
+        objetoAlbaran.cliente = {codigo: info[0].codigo_cliente, nombre: info[0].nombre.trim()};
+        objetoAlbaran.fecha = info[0].fecha;
+        if(carga.albaranes[i].contenedores.length == carga.albaranes[i].contenedores_leidos.length){
+          objetoAlbaran.completado = true; 
+        }else{
+          objetoAlbaran.completado = false; 
+        }                                             
+        objetoAlbaran.contenedores = {esperados: carga.albaranes[i].contenedores, escaneados: carga.albaranes[i].contenedores_leidos};
+
+        datos.cantidadContenedores += carga.albaranes[i].contenedores.length;
+        datos.cantidadContenedoresCompletados += carga.albaranes[i].contenedores_leidos.length;
+
+        datos.albs.push(objetoAlbaran);
+
+        datos.progreso = (datos.cantidadContenedoresCompletados * 100) / datos.cantidadContenedores;
+        document.getElementById("barraProgreso").style = "width: "+datos.progreso+"%";
+        document.getElementById("barraProgreso").innerHTML = datos.progreso.toFixed(2)+"%";
+        mostrarFichaAlbaran(carga.albaranes[i].codigo_albaran, "confirmar");                
+      }
+      document.getElementById("usuarioConfirmar").innerHTML = datos.usuario;
+      document.getElementById("vehiculoConfirmar").innerHTML = datos.vehiculo;
+      let texto = "<strong style='color: blue;'>" + carga.usuario + "</strong>" + " el  " + carga.fecha_larga; 
+      texto += "</br>" + total_contenedores_leidos +" de "+ total_contenedores + " contenedor/es leidos en " + carga.albaranes.length + " albaran/es"  ;
+      document.getElementById("descripcionConfirmar").innerHTML = texto;
+      mostrarCapa("confirmar");
+    }
+    //Muestra las diferentes cargar retomables para poder elegir que carga retomar
+    function mostrarCargasRetomables(cargas){
+
+      if ($("div#cargas").length == 0){
+
+        let titulo = "<div id='tituloRetomarCarga'></br><h1 class='tituloCarga'> Cargas disponibles para retomar del vehiculo "+cargas[0].vehiculo+":</h1></br></div>";
+        $("div#vehiculo").append(titulo);       
+
+
+        cargas.forEach(function (carga){
+          let total_contenedores = 0; 
+          let total_contenedores_leidos =0; 
+          if (carga.albaranes != false){
+	        carga.albaranes.forEach(function(albaran) {
+	          total_contenedores += albaran.contenedores.length;
+	          total_contenedores_leidos += (albaran.contenedores_leidos) ? albaran.contenedores_leidos.length : 0 ;
+	        });
+          let texto = "<div id='cargas' class='fichaCarga' onclick='mostrarConfirmacionCarga("+carga.id+","+total_contenedores+","+total_contenedores_leidos+");'>";
+          texto += "<strong>" + carga.usuario + "</strong>" + " el  " + carga.fecha_larga; 
+          texto += "</br>" + total_contenedores_leidos +" de "+ total_contenedores + " contenedor/es leidos en " + carga.albaranes.length + " albaran/es"  ;
+          texto += "</div>"; 
+
+          $("div#vehiculo").append(texto);
+      	  }
+        });      
+        texto = "<div id='botonCancelarRetomar'></br><Button onclick='cancelarRetomar()' class='btn btn-info btn-lg btn-block'>Volver</Button>";
+        $("div#vehiculo").append(texto);
+      }          
+    }    
+    //Muestra el progreso de los albaranes
+    async function mostrarFichaAlbaran(albaran, destino) {
+
+      if ($("div#ficha"+albaran).length > 0){
+        $("div#ficha"+albaran).remove();
+      }
+
+      let miAlb = null; 
+      datos.albs.forEach(function(alb) {
+        if(alb.codigo == albaran) {
+          miAlb = alb; 
+        }
+      });
+      if(!miAlb) {
+        console.error("MostrarFichaAlbaran(); -> No se ha encontrado el albaran " + albaran); 
+        return; 
+      } 
+      let subtitulo = "";
+      if (miAlb.codigo.includes("MA") == true){
+
+      	titulo = "<strong>" + miAlb.codigo + "</strong> " + miAlb.cliente.nombre +" "+preparaFecha(miAlb.fecha);
+      }else{
+      	titulo = "<strong>" + albaran + "</strong> " + miAlb.cliente.nombre + "(" + miAlb.cliente.codigo.slice(3).trim() + ") "+preparaFecha(miAlb.fecha);
+      }
+      if (miAlb.contenedores.esperados.length != 0){
+      		
+      	subtitulo = '<div class="barraProgreso"><progress id="file" value="' + miAlb.contenedores.escaneados.length + '" max="' + miAlb.contenedores.esperados.length + '" data-label="' + miAlb.contenedores.escaneados.length + ' de ' + miAlb.contenedores.esperados.length + ' contenedores"></progress></div>'; 
+      }
+
+      ficha = "";
+      ficha += "<div id='ficha"+albaran+"' class='fichaAlbaran'>";
+        ficha += "<div class='tituloFichaAlbaran'>";
+          ficha += titulo; 
+        ficha += "</div>";
+        ficha += "<div class='subtitulo'>";
+          ficha += subtitulo;
+        ficha += "</div>";
+               
+      ficha += "</div>";      
+
+      await $("div#"+destino+"").append(ficha);
+
+      let texto = "";
+      texto += "<div>"
+        miAlb.contenedores.esperados.forEach(function (cont){
+          if (miAlb.contenedores.escaneados.includes(cont) == true){
+            clase = "contenedorLeido"
+           // color = "green";
+          }else{
+           // color = "red";
+            clase = "contenedorNoLeido"
+          }
+          texto += "<span class='" + clase +"' >"+cont+"</span> ";
+        })
+      texto += "</div>"
+      if (destino != "confirmar"){
+      	if (miAlb.contenedores.escaneados.length > 0){
+            $("button#botonBorrarAlbaran"+albaran).remove();
+        }else{
+        	texto += "<button id='botonBorrarAlbaran"+albaran+"' class='btn btn-danger' onclick='botonBorrarAlbaran("+albaran+")' >Borrar</button>"
+        }
+      }      
+      $("div#ficha"+albaran).append(texto);   
+    }
+    //Comprueba el estado del albaran que se quiere elimniar
+    async function botonBorrarAlbaran(albaran){
+      for (var i = 0; i < datos.albs.length; i++) {
+        if (datos.albs[i].codigo == albaran){
+          if (datos.albs[i].contenedores.escaneados.length > 0){
+            alert("No se puede eliminar el albaran porque ya se ha escaneado un contenedor!");
+            $("button#botonBorrarAlbaran"+albaran).remove();
+          }else{
+            let r = confirm("Eliminar el albaran "+albaran+"?");
+            if (r == true){
+              await borrarAlbaran(albaran);
+              $("div#ficha"+albaran).remove();
+              datos.cantidadContenedores -= datos.albs[i].contenedores.esperados.length;
+              if (datos.progreso != 0){
+                datos.progreso = (datos.cantidadContenedoresCompletados * 100) / datos.cantidadContenedores;
+                document.getElementById("barraProgreso").style = "width: "+datos.progreso+"%";
+                document.getElementById("barraProgreso").innerHTML = datos.progreso.toFixed(2)+"%";
+              }
+              datos.albs.splice(i, 1);
+              await generarEvento(null, albaran, "El albaran "+albaran+" ha sido borrado.", 'ALBARAN_BORRADO', "borrar");            
+            }
+          }
+        }
+      }
+    }
+    //Borra el albaran de la base de datos
+    async function borrarAlbaran(albaran){
+      sql = `DELETE FROM albaranes WHERE id_carga = ${datos.id_carga} and codigo_albaran = ${albaran}`;
+      let finalizado = false;
+      await $.ajax({
+        url:'http://localhost/CargaCamiones/mysql.php',
+        data: {dbname: 'control_carga', query:sql},
+        type:'POST',
+        beforeSend:function() {
+           $("#descripcion_loading").html("Eliminando el albaran "+albaran+" de la carga "+datos.id_carga+".");
+        },
+        success:function(data) {  
+          finalizado = true;           
+        },                            
+      });
+      return finalizado;
+    }
+    //Cancela todas las cargas y muestra la pantalla principal
+    function cancelarRetomar(){
+      mostrarCapa("main");
+      $("div#cargas").remove();
+      $("div#botonCancelarRetomar").remove();
+      $("div#tituloRetomarCarga").remove();
+      document.getElementById("vehiculoLogin").value = "";
+      datos.vehiculo = "";
+      refrescarCabecera();
+      datos.cargaRetomada = false;
+    }
+    //Establece el foco en el input del div
+    //Establece el foco al input si tiene el atributo data-foco=true         
+    function estableceFoco() {
+
+      $("div#" + datos.capa.capaActual + " input[data-foco]").focus();
+    }
+    //Prepara la fecha para su facil lectura  
+	function preparaFecha(fecha){
+
+		return fecha.substring(8, 10)+"/"+fecha.substring(5,7)+"/"+fecha.substring(0,4)+" "+fecha.substring(11,16);
+	}
+	//Pide al usuario si quiere refrescar la pagina
+	function refrescar(){
+		
+		let r = confirm("Todo guardado hasta el último escaeao. Si quieres continuar con la carga deverás retomarla. Seguro que quieres refrescar?");
+		if (r == true){
+			location.reload();
+		}
+	}
+    //Calcula la diferencia de dias, horas y minutos de las dos fechas
+	function calcularDiferenciaFechas(fechaInicio, fechaFin){
+
+		let horaInicial = parseInt(fechaInicio.substring(11,13));
+		let horaFinal = parseInt(fechaFin.substring(11,13));
+		let minutoInicial = parseInt(fechaInicio.substring(14,16));
+		let minutoFinal = parseInt(fechaFin.substring(14, 16));
+		let fechaInicial = fechaInicio.substring(6,10)+"-"+fechaInicio.substring(3,5)+"-"+fechaInicio.substring(0,2);
+		let fechaFinal = fechaFin.substring(6,10)+"-"+fechaFin.substring(3,5)+"-"+fechaFin.substring(0,2);
+		fechaInicial = new Date(fechaInicial);
+		fechaFinal = new Date(fechaFinal);
+
+		let diasdif= fechaFinal.getTime()-fechaInicial.getTime();
+		let dias = Math.round(diasdif/(1000*60*60*24));
+		let horas = 0;
+		let minutos = 0;
+		let duracion = "";
+		if (horaFinal < horaInicial){
+			dias = dias - 1;
+		}else{
+			if ((horaFinal == horaInicial) && (minutoInicial > minutoFinal)){
+				dias = dias - 1;
+			}
+		}
+		if (dias == 0 || dias == -1){
+			if (horaFinal == horaInicial){      
+				minutos = minutoFinal - minutoInicial;
+				duracion = minutos+" minuto/s";
+			}else{
+				if (horaFinal < horaInicial){	
+					horas = 24 - (horaInicial - horaFinal);
+				}else{
+					horas = horaFinal - horaInicial;
+				}	
+				if (minutoFinal < minutoInicial){
+					horas = horas - 1;
+					minutos = minutoFinal + (60 - minutoInicial);
+				}else{
+					minutos = minutoInicial - minutoFinal;
+				}
+				if (horas == 0){
+					duracion = minutos+" minuto/s";
+				}else{
+					duracion = horas+" hora/s y "+minutos+" minuto/s";
+				}
+			}
+		}else{
+
+			duracion = dias+" dia/s, ";
+			if (horaFinal < horaInicial){	
+				horas = 24 - (horaInicial - horaFinal);
+			}else{
+				horas = horaFinal - horaInicial;
+			}	
+			if (horas != 0 && horas != -1){
+				if (minutoInicial > minutoFinal){
+					horas = horas - 1;
+					minutos = minutoFinal + (60 - minutoInicial);
+				}else{
+					minutos = minutoFinal - minutoInicial;
+				}
+			}else{
+				horas = 0;
+				if (minutoInicial > minutoFinal){
+					minutos = minutoFinal;
+				}else{
+					minutos = minutoFinal - minutoInicial;
+				}
+			}
+			duracion += horas+" hora/s y "+minutos+" minuto/s";
+		}
+		return duracion;
+	}
+	//Consultar la fecha final de una carga
+	async function conusltarFechaFinal(id){
+
+		let fecha;
+		let	sql = `select max(fecha_hora) as maxFecha from eventos where id_carga = '${id}' and alias = 'FINALIZADO_INCOMPLETO' or id_carga = '${id}' and alias = 'FINALIZADO_COMPLETO'`;
+		await $.ajax({
+			url:'http://localhost/CargaCamiones/mysql.php',
+			data: {dbname: 'control_carga', query:sql},
+			type:'POST',
+			beforeSend:function() {
+			 	$("#descripcion_loading").html("Comprobando fecha final...");
+			},
+			success:function(data){
+				if (data[0].maxFecha == null){
+					fecha = false;
+				}else{
+					fecha = preparaFecha(data[0].maxFecha); 
+				}				 	  				   
+			},
+		});
+		return fecha;
+	}
+    //Muestra la capa que le pasa por parametro
+    function mostrarCapa(idCapa) {
+	    // Recorre todas las capas      
+	      
+	    // Busca cual es la capa visible actual para establecer el valor en capaAnterior
+	    if(datos.capa.superCapa!="") {
+	      	datos.capa.capaAnterior = datos.capa.superCapa;
+	      	} else {
+	        	$(".capa").each(function() {
+	          	if($(this).hasClass('capaVisible')) {
+	            	datos.capa.capaAnterior = $(this).attr("id");
+	          	} 
+	        });
+	    }
+
+	    // Muestra la nueva capa
+	    $(".capa").each(function() {
+	    	idCapaActual = $(this).attr("id");
+	        // Compara si la capa actual es la indicada como parámetro
+	        if(idCapaActual == idCapa) {         
+	        	$("#" + idCapaActual).addClass("capaVisible");	    
+	        } else {                   
+	            $("#" + idCapaActual).removeClass("capaVisible");
+	        }
+	    });      
+	    datos.capa.capaActual = idCapa;       
+	    estableceFoco(); 
+    }
+  </script>
+</html>
