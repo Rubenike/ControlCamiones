@@ -533,7 +533,7 @@
 		texto +="<span class='nombre info'>"+datos.usuario+"</span>";
 		texto +="<span class='vehiculo info'>"+datos.vehiculo+"</span>";
 		texto +="<span class='box info'>"+datos.box+"</span>";
-		texto +="<button class='botonRefrescar' onClick='refrescar()'><img src='refresh.png' width='15' height='15'></button>";
+		texto +="<button class='botonRefrescar' id='botonRefrescar' onClick='refrescar()'><img src='refresh.png' width='15' height='15'></button>";
 		texto +="<span class='id info'>"+datos.id_carga+"</span>";
 		texto +="&nbsp;</div>"; 
 		$("div#cabecera").append(texto);   
@@ -541,6 +541,14 @@
 		$(document).keydown(async function(e) {
 			
 			await estableceFoco();        
+		});
+
+		$("button#botonRefrescar").click(function(){
+
+			let r = confirm("Todo guardado hasta el último escaeao. Si quieres continuar con la carga deverás retomarla. Seguro que quieres refrescar?");
+			if (r == true){
+				location.reload();
+			}
 		});
 
 		$("button#botonMostrarTeclado").click(function(){
@@ -1393,25 +1401,22 @@
 			if (infoContenedor == false){
 				descripcion = "El contenedor "+extra+" no está asignado a ningún albaran. Revisar la etiqueta del contenedor."
 			}else{
-				if (infoContenedor.codigo_albaran.includes("#")){
+
+				let infoAlbaran = await sacarInformacionAlbaran(infoContenedor.codigo_albaran);
+				let fecha = preparaFecha(infoAlbaran[0].fecha);
+				descripcion = "El contenedor "+extra+" no pertenece a ningún albaran escaneado. Este contenedor pertenece al albaran "+infoContenedor.codigo_albaran+" del pedido "+infoContenedor.codigo_pedido.trim()+". Información del albaran "+infoContenedor.codigo_albaran+": cliente: "+infoAlbaran[0].codigo_cliente.trim()+", nombre: "+infoAlbaran[0].nombre.trim()+", fecha: "+fecha.trim()+".";
+				let idCargaAlbaran = await obtenerIdCargaAlbaran(infoContenedor.codigo_albaran);
+				if (idCargaAlbaran != false){
 					
-				}else{
-					let infoAlbaran = await sacarInformacionAlbaran(infoContenedor.codigo_albaran);
-					let fecha = preparaFecha(infoAlbaran[0].fecha);
-					descripcion = "El contenedor "+extra+" no pertenece a ningún albaran escaneado. Este contenedor pertenece al albaran "+infoContenedor.codigo_albaran+" del pedido "+infoContenedor.codigo_pedido.trim()+". Información del albaran "+infoContenedor.codigo_albaran+": cliente: "+infoAlbaran[0].codigo_cliente.trim()+", nombre: "+infoAlbaran[0].nombre.trim()+", fecha: "+fecha.trim()+".";
-					let idCargaAlbaran = await obtenerIdCargaAlbaran(infoContenedor.codigo_albaran);
-					if (idCargaAlbaran != false){
-						
-						let infoCargaAlbaran = await obtenerInfoCargaAlbaran(idCargaAlbaran.id_carga);
-						let cargaFinalizada = await comprobarCargaFinalizada(idCargaAlbaran.id_carga);
-						if (cargaFinalizada == true){
-							descripcion += " Este albaran fué cargado por "+infoCargaAlbaran.usuario+" en el vehiculo "+infoCargaAlbaran.vehiculo+" en el box "+infoCargaAlbaran.box+".";
-						}else{
-							descripcion += " Este contenedor pertenece a una carga en curso que se está efectuando en el box "+infoCargaAlbaran.box+" por el usuario "+infoCargaAlbaran.usuario+" con el vehciulo "+infoCargaAlbaran.vehiculo+".";
-						}
+					let infoCargaAlbaran = await obtenerInfoCargaAlbaran(idCargaAlbaran.id_carga);
+					let cargaFinalizada = await comprobarCargaFinalizada(idCargaAlbaran.id_carga);
+					if (cargaFinalizada == true){
+						descripcion += " Este albaran fué cargado por "+infoCargaAlbaran.usuario+" en el vehiculo "+infoCargaAlbaran.vehiculo+" en el box "+infoCargaAlbaran.box+".";
+					}else{
+						descripcion += " Este contenedor pertenece a una carga en curso que se está efectuando en el box "+infoCargaAlbaran.box+" por el usuario "+infoCargaAlbaran.usuario+" con el vehciulo "+infoCargaAlbaran.vehiculo+".";
 					}
-					descripcion += " Si quiere volver pulse aceptar.";
 				}
+				descripcion += " Si quiere volver pulse aceptar.";
 			}
 
 			document.getElementById("tituloErrorContenedor").innerHTML = titulo;
@@ -1461,7 +1466,7 @@
     async function leerAlbaranContenedor(){
 
 		let dato = formatear(document.getElementById("entrarAlbaranContenedor").value);
-		if(dato.length > app.caracteresDeAlbaran && dato.length != app.caracteresDeContenedor) {
+		if(dato.length != app.caracteresDeAlbaran && dato.length != app.caracteresDeContenedor) {
 			let alias = "CODIGO_INCORRECTO";
 			let titulo = "CÓDIGO INCORRECTO";
 			let descripcion = "El codigo "+dato+" no corresponde ni a un albaran ni a un contenedor, asegurate de haber escaneado el código correcto, pulsa para volver atrás e intentarlo de nuevo."
@@ -1471,7 +1476,7 @@
 			audio.currentTime = 0;
 			audio.play();
 		} else {
-			if (dato.length <= app.caracteresDeAlbaran){
+			if (dato.length == app.caracteresDeAlbaran){
 				//ALBARAN 
 				let albaran = "";
 				let info = "";
@@ -1814,7 +1819,7 @@
 	}
 	//Pide al usuario si quiere refrescar la pagina
 	function refrescar(){
-		
+			
 		let r = confirm("Todo guardado hasta el último escaeao. Si quieres continuar con la carga deverás retomarla. Seguro que quieres refrescar?");
 		if (r == true){
 			location.reload();
