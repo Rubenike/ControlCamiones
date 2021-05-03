@@ -1357,7 +1357,6 @@
 				$("#descripcion_loading").html("Insertando la carga");
 			},
 			success:function(data){
-				console.log("Todo bien");
 			}
 		});
 		await getMaxId();
@@ -1482,9 +1481,7 @@
 				let info = "";
 
 				albaran = dato;
-				console.log(albaran);
 				info = await sacarInformacionAlbaran(albaran);
-				console.log(info);
 				if (info.length != 0){
 					let objetoAlbaran = new Object();
 					objetoAlbaran.codigo = albaran;
@@ -1748,13 +1745,14 @@
       	if (miAlb.contenedores.escaneados.length > 0){
             $("button#botonBorrarAlbaran"+albaran).remove();
         }else{
-        	texto += "<button id='botonBorrarAlbaran"+albaran+"' class='btn btn-danger' onclick='botonBorrarAlbaran("+albaran+")' >Borrar</button>"
+        	texto += `<button id='botonBorrarAlbaran"+albaran+"' class='btn btn-danger' onclick='botonBorrarAlbaran("${albaran}")' >Borrar</button>`;
         }
       }      
       $("div#ficha"+albaran).append(texto);   
     }
     //Comprueba el estado del albaran que se quiere elimniar
     async function botonBorrarAlbaran(albaran){
+
       for (var i = 0; i < datos.albs.length; i++) {
         if (datos.albs[i].codigo == albaran){
           if (datos.albs[i].contenedores.escaneados.length > 0){
